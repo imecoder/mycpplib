@@ -4,7 +4,7 @@ all:
 	g++ threadpool.cpp -c -o threadpool.o -Wall -Winline -g
 	g++ datetime.cpp -c -o datetime.o -Wall -Winline -g
 	g++ epoll.cpp -c -o epoll.o -Wall -Winline -g
-	ar rcs librui.a *.o
+	ar rcs libmcpp.a *.o
 
 	gcc crypto.cpp net.cpp threadpool.cpp datetime.cpp epoll.cpp -fPIC -shared -o libmycpp.so
 
