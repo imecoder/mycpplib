@@ -1,4 +1,4 @@
-# mylib
+# mycpplib
 
 依赖库
 
