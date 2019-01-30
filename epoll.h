@@ -4,8 +4,6 @@
 #include <sys/epoll.h>
 #include <vector>
 
-using namespace std ;
-
 namespace rui {
 
 	enum STATUS

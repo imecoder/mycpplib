@@ -3,7 +3,8 @@
 namespace rui {
 
 
-bool crypto::encode(const vector<char>& v_in, vector<char>& v_out, const int i_num) const
+bool crypto::encode(const std::vector<char>& v_in,
+					std::vector<char>& v_out, const int i_num) const
 {
 	v_out.clear();
 	if(v_in.empty())
@@ -40,7 +41,9 @@ bool crypto::encode(const vector<char>& v_in, vector<char>& v_out, const int i_n
 	return true;
 }
 
-bool crypto::decode(const vector<char>& v_in, vector<char>& v_out, const int i_num) const
+bool crypto::decode(const std::vector<char>& v_in,
+					std::vector<char>& v_out,
+					const int i_num) const
 {
 	v_out.clear();
 
@@ -76,25 +79,30 @@ bool crypto::decode(const vector<char>& v_in, vector<char>& v_out, const int i_n
 	return true;
 }
 
-bool crypto::encode_to_string(const vector<char>& v_in, string& s_out, const int i_num) const
+bool crypto::encode_to_string(const std::vector<char>& v_in,
+							  std::string& s_out,
+							  const int i_num) const
 {
 	s_out.clear();
-	vector<char> v_data;
+	std::vector<char> v_data;
 	bool rb = encode(v_in, v_data, i_num);
 	hex_to_string(s_out, v_data);
 	return rb;
 }
 
-bool crypto::decode_from_string(const string& s_in, vector<char>& v_out, const int i_num) const
+bool crypto::decode_from_string(const std::string& s_in,
+								std::vector<char>& v_out,
+								const int i_num) const
 {
 	v_out.clear();
-	vector<char> v_data;
+	std::vector<char> v_data;
 	string_to_hex(v_data, s_in);
 	bool rb = decode(v_data, v_out, i_num);
 	return rb;
 }
 
-string& crypto::hex_to_string(string& s_data, const vector<char>& v_data) const
+std::string& crypto::hex_to_string(std::string& s_data,
+								   const std::vector<char>& v_data) const
 {
 	s_data.clear();
 	for(unsigned int i = 0; i < v_data.size(); ++i)
@@ -107,7 +115,8 @@ string& crypto::hex_to_string(string& s_data, const vector<char>& v_data) const
 	return s_data;
 }
 
-void crypto::string_to_hex(vector<char>& v_data, const string& s_data) const
+void crypto::string_to_hex(std::vector<char>& v_data,
+						   const std::string& s_data) const
 {
 	v_data.clear();
 

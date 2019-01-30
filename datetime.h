@@ -3,7 +3,6 @@
 
 #include <time.h>
 #include <iostream>
-using namespace std ;
 
 namespace rui {
 	class datetime
@@ -12,9 +11,9 @@ namespace rui {
 			datetime( const time_t second = time( NULL ) );
 
 			void load_from_second( const time_t second );
-			void load_from_string( const string& s, const char *format );
+			void load_from_string( const std::string& s, const char *format );
 
-			string to_string( const char *format );
+			std::string to_string( const char *format );
 			time_t to_time_t( );
 
 			int get_day_of_week( ) const;
@@ -23,7 +22,7 @@ namespace rui {
 			int get_minute( ) const;
 			int get_second( ) const;
 
-			string to_http_string( );
+			std::string to_http_string( );
 
 
 	#ifdef OTL_STL

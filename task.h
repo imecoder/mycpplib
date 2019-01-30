@@ -59,7 +59,7 @@ namespace rui {
 		int mi_fd;
 		int mi_type;
 		time_t m_time;
-		vector<char> mv_data ;
+		std::vector<char> mv_data ;
 		bool mb_closed ;
 	} ;
 }

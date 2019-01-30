@@ -2968,7 +2968,7 @@ public:
 #if defined(OTL_ACE)
  otl_tmpl_vector<otl_stream_shell_generic*> s;
 #else
- STD_NAMESPACE_PREFIX vector<otl_stream_shell_generic*> s;
+ STD_NAMESPACE_PREFIX std::vector<otl_stream_shell_generic*> s;
 #endif
 
   otl_stream_pool_entry():
@@ -3034,8 +3034,8 @@ public:
  typedef ACE_RB_Tree_Node<OTL_STRING_CONTAINER,cache_entry_type> ace_map_entry;
 #else
   typedef STD_NAMESPACE_PREFIX
-  map<OTL_STRING_CONTAINER,cache_entry_type,otl_ltstr> sc_type;
-  typedef STD_NAMESPACE_PREFIX vector<otl_stream_shell_generic*> vec_type;
+  std::map<OTL_STRING_CONTAINER,cache_entry_type,otl_ltstr> sc_type;
+  typedef STD_NAMESPACE_PREFIX std::vector<otl_stream_shell_generic*> vec_type;
 #endif
 
 protected:
@@ -3640,7 +3640,7 @@ public:
 class otl_pl_vec_generic{
 public:
 
- typedef STD_NAMESPACE_PREFIX vector<bool> null_flag_type;
+ typedef STD_NAMESPACE_PREFIX std::vector<bool> null_flag_type;
 
 
  otl_pl_vec_generic():
@@ -3722,7 +3722,7 @@ template<OTL_TYPE_NAME T,const int type_code,const int T_sz>
 class otl_T_vec: public otl_pl_vec_generic{
 public:
 
- STD_NAMESPACE_PREFIX vector<T> v;
+ STD_NAMESPACE_PREFIX std::vector<T> v;
 
  otl_T_vec():
     v()
@@ -8488,12 +8488,12 @@ otl_uncaught_exception()){
        (OTL_RCAST(unsigned char*,this->vl[cur_x]->val(i2)),
         OTL_RCAST(unsigned char*,
                   OTL_CCAST(char*,(*OTL_RCAST(STD_NAMESPACE_PREFIX 
-                                              vector<OTL_STRING_CONTAINER>*,
+                                              std::vector<OTL_STRING_CONTAINER>*,
                                               vec.get_p_v()))[i2].c_str())),
         overflow,
         this->vl[cur_x]->get_elem_size(),
         OTL_SCAST(int,(*OTL_RCAST(STD_NAMESPACE_PREFIX 
-                                  vector<OTL_STRING_CONTAINER>*,
+                                  std::vector<OTL_STRING_CONTAINER>*,
                                   vec.get_p_v()))[i2].length())
        );
       if(overflow){
@@ -8523,7 +8523,7 @@ otl_uncaught_exception()){
       otl_datetime* ext_dt;
       for(j=0;j<tmp_len;++j){
        ext_dt=OTL_RCAST(otl_datetime*,
-                        &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<otl_datetime>*,
+                        &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<otl_datetime>*,
                                      vec.get_p_v()))[j]);
        convert_date(*int_dt,*ext_dt);
        ++int_dt;
@@ -8534,7 +8534,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<int>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<int>*,
                                       vec.get_p_v()))[0]),
                sizeof(int)*tmp_len);
       break;
@@ -8542,7 +8542,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<double>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<double>*,
                                       vec.get_p_v()))[0]),
                sizeof(double)*tmp_len);
       break;
@@ -8550,7 +8550,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<float>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<float>*,
                                       vec.get_p_v()))[0]),
                sizeof(float)*tmp_len);
       break;
@@ -8558,7 +8558,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<unsigned>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<unsigned>*,
                                       vec.get_p_v()))[0]),
                sizeof(unsigned)*tmp_len);
       break;
@@ -8566,7 +8566,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<short>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<short>*,
                                       vec.get_p_v()))[0]),
                  sizeof(short)*tmp_len);
       break;
@@ -8574,7 +8574,7 @@ otl_uncaught_exception()){
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<long int>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<long int>*,
                                       vec.get_p_v()))[0]),
                sizeof(long int)*tmp_len);
       break;
@@ -9404,7 +9404,7 @@ public:
       switch(vec.get_vtype()){
       case otl_var_char:
         for(i=0;i<tmp_len;++i){
-          (*OTL_RCAST(STD_NAMESPACE_PREFIX vector<OTL_STRING_CONTAINER>*,vec.get_p_v()))[i]=
+          (*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<OTL_STRING_CONTAINER>*,vec.get_p_v()))[i]=
             OTL_RCAST(char*,in_vl[cur_in_x]->val(i));
         }
         break;
@@ -9417,7 +9417,7 @@ public:
           for(j=0;j<tmp_len;++j){
             ext_dt=OTL_RCAST
               (otl_datetime*,
-               &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<otl_datetime>*,vec.get_p_v()))[j]);
+               &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<otl_datetime>*,vec.get_p_v()))[j]);
             convert_date(*ext_dt,*int_dt);
             ++int_dt;
           }
@@ -9426,41 +9426,41 @@ public:
       case otl_var_int:
         memcpy(OTL_RCAST
                (char*,
-                &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<int>*,vec.get_p_v()))[0]),
+                &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<int>*,vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(int)*tmp_len);
         break;
       case otl_var_double:
         memcpy(OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<double>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<double>*,
                                       vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(double)*tmp_len);
         break;
       case otl_var_float:
         memcpy(OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<float>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<float>*,
                                       vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(float)*tmp_len);
         break;
       case otl_var_unsigned_int:
         memcpy(OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<unsigned>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<unsigned>*,
                                       vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(unsigned)*tmp_len);
         break;
       case otl_var_short:
         memcpy(OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<short>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<short>*,
                                       vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(short)*tmp_len);
         break;
       case otl_var_long_int:
         memcpy(OTL_RCAST(char*,
-                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<long int>*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX std::vector<long int>*,
                                       vec.get_p_v()))[0]),
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(long int)*tmp_len);
@@ -33730,7 +33730,7 @@ protected:
 
 #if defined(OTL_STL)
   typedef STD_NAMESPACE_PREFIX 
-    map<const char*,int,otl_ltcharstar> var_name2pos_map_type;
+    std::map<const char*,int,otl_ltcharstar> var_name2pos_map_type;
   var_name2pos_map_type var_name2pos_map_;
 #endif
 

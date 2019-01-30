@@ -8,7 +8,7 @@ namespace rui {
 		load_from_second( second );
 	}
 
-	string datetime::to_http_string( )
+	std::string datetime::to_http_string( )
 	{
 		//"Fri, 09 Jul 2010 09:14:09 GMT"
 		return to_string( "%a, %d %b %Y %H:%M:%S GTM" );
@@ -22,12 +22,12 @@ namespace rui {
 		m_tm = *ptm;
 	}
 
-	void datetime::load_from_string( const string& s, const char *format )
+	void datetime::load_from_string( const std::string& s, const char *format )
 	{
 		strptime( s.c_str( ), format, &m_tm );
 	}
 
-	string datetime::to_string( const char *format )
+	std::string datetime::to_string( const char *format )
 	{
 		char szTime[50] = "";
 		strftime( szTime, 50, format, &m_tm );

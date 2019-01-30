@@ -1,19 +1,19 @@
 #ifndef _THREADPOOL_H_
 #define _THREADPOOL_H_
 
+#include <queue>
+#include <memory>
+
 #include "rui.h"
 #include <errno.h>
-#include <queue>
 #include <pthread.h>
-using namespace std ;
+
 
 namespace rui {
 	class threadtask
 	{
 	public:
-		virtual ~threadtask()
-		{
-		}
+		virtual ~threadtask(){}
 		virtual void run() = 0;
 	};
 
@@ -31,7 +31,7 @@ namespace rui {
 		
 		bool mb_shutdown;
 		
-		queue<threadtask*> mq_task;
+		std::queue<std::unique_ptr<threadtask>> mq_task;
 		pthread_mutex_t m_mutex_lock;
 		pthread_cond_t m_cond_lock;
 
@@ -44,9 +44,9 @@ namespace rui {
 			return instance ;
 		}
 		
-		bool start(const int threadCount = 1000 );
+		bool start(const int threadCount = 5000 );
 		
-		void add_task(threadtask* ptask);
+		void add_task(std::unique_ptr<threadtask> ptask);
 	};
 }
 #endif

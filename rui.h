@@ -19,13 +19,12 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-using namespace std ;
 
 #define MAX_SOCKET_SIZE	65536
 
-typedef map<string, string> URLContainer;
+typedef std::map<std::string, std::string> URLContainer;
 
-inline string getTime(const char *format)
+inline std::string getTime(const char *format)
 {
 	time_t second = time( NULL ) ;
 	char szTime[50] = "";
@@ -34,7 +33,7 @@ inline string getTime(const char *format)
 	return szTime;
 }
 
-#define	rlog	cout << "[" << syscall( SYS_gettid ) << " " << getTime( "%Y-%m-%d %H:%M:%S") << " " << __FILE__ << "," << __LINE__ << "] "
+#define	rlog	std::cout << "[" << syscall( SYS_gettid ) << " " << getTime( "%Y-%m-%d %H:%M:%S") << " " << __FILE__ << "," << __LINE__ << "] "
 
 
 /**
@@ -43,7 +42,7 @@ inline string getTime(const char *format)
 	template<typename T1, typename T2>
 inline T1 lexical_cast( const T2 &t )
 {
-	stringstream ss ;
+	std::stringstream ss ;
 
 	ss << t ;
 	T1 tReturn ;
@@ -53,7 +52,7 @@ inline T1 lexical_cast( const T2 &t )
 	return	tReturn ;
 }
 
-inline bool is_digital( const string& s_data )
+inline bool is_digital( const std::string& s_data )
 {
 	for(size_t i=0;i<s_data.size();i++)
 		if (!isdigit( s_data.at(i)))
@@ -65,25 +64,25 @@ inline bool is_digital( const string& s_data )
 
 // 字符串截取
 // 输出参数，输入参数，头，尾
-inline string::size_type Substr( string& sSub, const string& s, const string& s_head, const string& sTail, const string::size_type pos = 0 )
+inline std::string::size_type Substr( std::string& sSub, const std::string& s, const std::string& s_head, const std::string& sTail, const std::string::size_type pos = 0 )
 {
 	if( pos >= s.size( ) )
 	{
-		return	string::npos ;
+		return	std::string::npos ;
 	}
 
-	string::size_type pos1 = 0 ;
-	string::size_type pos2 = 0 ;
+	std::string::size_type pos1 = 0 ;
+	std::string::size_type pos2 = 0 ;
 
-	if( ( pos1 = s.find( s_head, pos ) ) == string::npos )
+	if( ( pos1 = s.find( s_head, pos ) ) == std::string::npos )
 	{
-		return	string::npos ;
+		return	std::string::npos ;
 	}
 
-	if( ( pos2 = s.find( sTail, pos1 + s_head.size( ) ) ) == string::npos )
+	if( ( pos2 = s.find( sTail, pos1 + s_head.size( ) ) ) == std::string::npos )
 	{
-		string sErr = "cant find word: " + sTail ;
-		return	string::npos ;
+		std::string sErr = "cant find word: " + sTail ;
+		return	std::string::npos ;
 	}
 
 	sSub = s.substr( pos1 + s_head.size( ), pos2 - pos1 - s_head.size( ) ) ;
@@ -91,32 +90,32 @@ inline string::size_type Substr( string& sSub, const string& s, const string& s_
 	return	pos2 + sTail.size( ) ;
 }
 
-inline string::size_type SubstrF( string& sSub, const string& s, const string& s_head, const string& sTail, const string::size_type pos = 0 )
+inline std::string::size_type SubstrF( std::string& sSub, const std::string& s, const std::string& s_head, const std::string& sTail, const std::string::size_type pos = 0 )
 {
 	if( pos >= s.size( ) )
 	{
-		return string::npos;
+		return std::string::npos;
 	}
 
-	string s1( s );
+	std::string s1( s );
 	transform(s1.begin(), s1.end(), s1.begin(), ::tolower);
 
-	string sHead1( s_head );
+	std::string sHead1( s_head );
 	transform(sHead1.begin(), sHead1.end(), sHead1.begin(), ::tolower);
 
-	string sTail1( sTail );
+	std::string sTail1( sTail );
 	transform(sTail1.begin(), sTail1.end(), sTail1.begin(), ::tolower);
 
-	string::size_type pos1 = 0;
-	string::size_type pos2 = 0;
+	std::string::size_type pos1 = 0;
+	std::string::size_type pos2 = 0;
 
-	if( ( pos1 = s1.find( sHead1, pos ) ) == string::npos )
-		return string::npos;
+	if( ( pos1 = s1.find( sHead1, pos ) ) == std::string::npos )
+		return std::string::npos;
 
-	if( ( pos2 = s1.find( sTail1, pos1 + sHead1.size( ) ) ) == string::npos )
+	if( ( pos2 = s1.find( sTail1, pos1 + sHead1.size( ) ) ) == std::string::npos )
 	{
-		string sErr = "cant find word: " + sTail;
-		return string::npos;
+		std::string sErr = "cant find word: " + sTail;
+		return std::string::npos;
 	}
 
 	sSub = s.substr( pos1 + s_head.size( ), pos2 - pos1 - s_head.size( ) );
@@ -148,7 +147,7 @@ inline int findSz( const char *sz1, const char *sz2, int size1, int size2 )
 
 
 	template <typename T1, typename T2>
-inline T2 get_map_value( const map<T1, T2> &mp, const T1 &Key )
+inline T2 get_map_value( const std::map<T1, T2> &mp, const T1 &Key )
 {
 	URLContainer::const_iterator citer = mp.find( Key );
 	if( citer != mp.end( ) )
@@ -159,26 +158,26 @@ inline T2 get_map_value( const map<T1, T2> &mp, const T1 &Key )
 
 
 	template <typename T1, typename T2>
-inline ostream &operator <<( ostream &os, const map<T1, T2> &mp )
+inline std::ostream &operator <<( std::ostream &os, const std::map<T1, T2> &mp )
 {
-	for( typename map<T1, T2>::const_iterator iter = mp.begin( ); iter != mp.end( ); ++iter )
-		os << iter->first << " " << iter->second << endl;
+	for( typename std::map<T1, T2>::const_iterator iter = mp.begin( ); iter != mp.end( ); ++iter )
+		os << iter->first << " " << iter->second << std::endl;
 
 	return os;
 }
 
-inline unsigned long long string_to_ullong(const string& str )
+inline unsigned long long string_to_ullong(const std::string& str )
 {
-	stringstream strIn;
+	std::stringstream strIn;
 	strIn<<str;
 	unsigned long long ullNum;
 	strIn>>ullNum;
 	return ullNum;
 }
 
-inline ostream &operator <<( ostream &os, const vector<char>& cevc )
+inline std::ostream &operator <<( std::ostream &os, const std::vector<char>& cevc )
 {
-	copy( cevc.begin( ), cevc.end( ), ostreambuf_iterator<char>( os ) );
+	copy( cevc.begin( ), cevc.end( ), std::ostreambuf_iterator<char>( os ) );
 	return os;
 }
 
@@ -191,18 +190,18 @@ inline void sleepx( const long int second, const long int msecond = 0L )
 	::select( 0, NULL, NULL, NULL, &tv );
 }
 
-inline pair<string, string> divideString( const string& sLine, const string& sDelem )
+inline std::pair<std::string, std::string> divideString( const std::string& sLine, const std::string& sDelem )
 {
-	string::size_type pos = sLine.find( sDelem );
-	if( pos != string::npos )
+	std::string::size_type pos = sLine.find( sDelem );
+	if( pos != std::string::npos )
 	{
-		string s_key( sLine.substr( 0, pos ) );
-		string s_value( sLine.substr( pos + sDelem.size( ) ) );
+		std::string s_key( sLine.substr( 0, pos ) );
+		std::string s_value( sLine.substr( pos + sDelem.size( ) ) );
 
-		return make_pair( s_key, s_value );
+		return std::make_pair( s_key, s_value );
 	}
 
-	return make_pair( "", "" );
+	return std::make_pair( "", "" );
 }
 
 inline int gzcompress(const unsigned char *data, unsigned long ndata, unsigned char *zdata, unsigned long *nzdata)
@@ -264,7 +263,7 @@ inline int gzcompress(const unsigned char *data, unsigned long ndata, unsigned c
 	return -1;
 }
 
-inline int ungzipxp( const char *source, const int len, vector<char>& desvec )
+inline int ungzipxp( const char *source, const int len, std::vector<char>& desvec )
 {
 	desvec.clear( );
 
@@ -287,7 +286,7 @@ inline int ungzipxp( const char *source, const int len, vector<char>& desvec )
 	int ret = inflateInit2( &d_stream, 47 );
 	if( ret != Z_OK )
 	{
-		rlog << "inflateInit2() error" << endl ;
+		rlog << "inflateInit2() error" << std::endl ;
 		return ret;
 	}
 
@@ -324,13 +323,13 @@ inline int ungzipxp( const char *source, const int len, vector<char>& desvec )
 	return ret;
 }
 
-inline string genVid( bool isUpperCase = false )
+inline std::string genVid( bool isUpperCase = false )
 {
 	unsigned char out[16] ;
 	memset( out, 0, sizeof( out ) ) ;
 	uuid_generate_random( out ) ;
 
-	string sRv ;
+	std::string sRv ;
 	for( std::size_t i = 0 ; i < sizeof( out ) ; ++i )
 	{
 		char buff[3] = "" ;
@@ -353,22 +352,22 @@ inline string genVid( bool isUpperCase = false )
 
 
 
-inline bool calc_md5(const string& s_path, string& s_md5 )
+inline bool calc_md5(const std::string& s_path, std::string& s_md5 )
 {
 	if ( s_path.empty() )
 	{
-		rlog << "s_path empty" << endl ;
+		rlog << "s_path empty" << std::endl ;
 		return false ;
 	}
 
 	int	i_fd = open( s_path.c_str(), O_RDONLY ) ;
 	if ( i_fd < 0 )
 	{
-		rlog << "open(" << s_path << ") " << strerror( errno )  << endl ;
+		rlog << "open(" << s_path << ") " << strerror( errno )  << std::endl ;
 		return false;
 	}
 
-	vector<char> v_md5_data ;
+	std::vector<char> v_md5_data ;
 
 	while ( true )
 	{
@@ -376,7 +375,7 @@ inline bool calc_md5(const string& s_path, string& s_md5 )
 		int size = ::read( i_fd, buffer, 4096 ) ;
 		if ( size < 0 )
 		{
-			rlog << "read(" << s_path << ") " << strerror( errno )  << endl ;
+			rlog << "read(" << s_path << ") " << strerror( errno )  << std::endl ;
 			close( i_fd ) ;
 			return -1 ;
 		}
@@ -388,7 +387,7 @@ inline bool calc_md5(const string& s_path, string& s_md5 )
 
 	close( i_fd ) ;
 
-	string s_data( v_md5_data.begin(), v_md5_data.end() ) ;
+	std::string s_data( v_md5_data.begin(), v_md5_data.end() ) ;
 	unsigned char md[16] = { 0x00 };
 	MD5((unsigned char*)s_data.c_str(), s_data.size(), md ) ;
 

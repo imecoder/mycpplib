@@ -19,14 +19,14 @@ namespace rui {
 			if ( mi_fd != -1 )
 			{
 				close(mi_fd);
-				rlog << "close epoll socket(" << mi_fd << ")" << endl ;
+				rlog << "close epoll socket(" << mi_fd << ")" << std::endl ;
 			}
 		}
 
 		if ( mi_epoll != -1 )
 		{
 			close(mi_epoll);
-			rlog << "close epoll(" << mi_epoll << ")" << endl ;
+			rlog << "close epoll(" << mi_epoll << ")" << std::endl ;
 		}
 	}
 
@@ -37,7 +37,7 @@ namespace rui {
 		o_event.events = EPOLLIN |EPOLLET |EPOLLERR ;
 		::epoll_ctl(mi_epoll, EPOLL_CTL_ADD, i_socket, &o_event);
 
-		rlog << "socket(" << i_socket << ") ---> epoll(" << mi_epoll << ")" << endl ;
+		rlog << "socket(" << i_socket << ") ---> epoll(" << mi_epoll << ")" << std::endl ;
 	}
 
 	void epoll::event_del(const int i_socket)
@@ -47,14 +47,14 @@ namespace rui {
 		o_event.events = EPOLLIN |EPOLLET |EPOLLERR ;
 		::epoll_ctl(mi_epoll, EPOLL_CTL_DEL, i_socket, &o_event);
 
-		rlog << "socket(" << i_socket << ") -x-> epoll(" << mi_epoll << ")" << endl ;
+		rlog << "socket(" << i_socket << ") -x-> epoll(" << mi_epoll << ")" << std::endl ;
 	}
 
 	bool epoll::create(const short sh_port)
 	{
 		if( sh_port == -1 )
 		{
-			rlog << "port error !" << endl ;
+			rlog << "port error !" << std::endl ;
 			return false;
 		}
 
@@ -63,14 +63,14 @@ namespace rui {
 		mi_fd = ::socket(AF_INET, SOCK_STREAM, 0) ;
 		if( mi_fd == -1 )
 		{
-			rlog << "socket() error : " << strerror(errno) << endl ;
+			rlog << "socket() error : " << strerror(errno) << std::endl ;
 			return false;
 		}
 
 		socklen_t val = 1 ;
 		if( ::setsockopt( mi_fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof( val ) ) < 0 )
 		{
-			rlog << "setsockopt() error : " << strerror(errno) << endl ;
+			rlog << "setsockopt() error : " << strerror(errno) << std::endl ;
 			return false;
 		}
 
@@ -81,20 +81,20 @@ namespace rui {
 		my_addr.sin_addr.s_addr = htonl( INADDR_ANY ) ;
 		if( ::bind( mi_fd, ( sockaddr* )&my_addr, sizeof( sockaddr ) ) == -1 )
 		{
-			rlog << "bind() error : " << strerror(errno) << endl ;
+			rlog << "bind() error : " << strerror(errno) << std::endl ;
 			return false;
 		}
 
 		if( ::listen( mi_fd, EPOLL_LISTEN_MAX_SIZE ) == -1 )
 		{
-			rlog << "listen() error : " << strerror(errno) << endl ;
+			rlog << "listen() error : " << strerror(errno) << std::endl ;
 			return false;
 		}
 
 		mi_epoll = ::epoll_create(EPOLL_WAIT_MAX_SIZE);
 		if(mi_epoll < 0)
 		{
-			rlog << "epoll_create() error : " << strerror(errno) << endl;
+			rlog << "epoll_create() error : " << strerror(errno) << std::endl;
 			return false;
 		}
 
@@ -105,7 +105,7 @@ namespace rui {
 	{
 		if ( msh_port == -1 )
 		{
-			rlog << "port error !" << endl ;
+			rlog << "port error !" << std::endl ;
 			return -1;
 		}
 
@@ -116,18 +116,18 @@ namespace rui {
 		int i_socket= ::accept( mi_fd, reinterpret_cast<sockaddr*>( &their_addr ), &sin_size );
 		if( i_socket < 0 )
 		{
-			rlog << "accept() error : " << strerror(errno) << endl ;
+			rlog << "accept() error : " << strerror(errno) << std::endl ;
 			return i_socket ;
 		}
 
-		string ip = ::inet_ntoa( their_addr.sin_addr ) ;
+		std::string ip = ::inet_ntoa( their_addr.sin_addr ) ;
 		unsigned short port = ::ntohs( their_addr.sin_port ) ;
 
-		cout << endl << endl ;
-		rlog << ">>>   socket(" << i_socket << ") from (" << ip << ":" << port << ")   <<<" << endl;
+		std::cout << std::endl << std::endl ;
+		rlog << ">>>   socket(" << i_socket << ") from (" << ip << ":" << port << ")   <<<" << std::endl;
 
 		if ( !rui::net::set_nonblocking(i_socket) )
-			rlog << "rui::net::set_nonblocking((" << i_socket << ") error" << endl ;
+			rlog << "rui::net::set_nonblocking((" << i_socket << ") error" << std::endl ;
 
 		return i_socket ;
 	}
@@ -138,7 +138,7 @@ namespace rui {
 
 		int nfds = ::epoll_wait(mi_epoll, mresult_event, EPOLL_WAIT_MAX_SIZE, EPOLL_WAIT_TIME);
 		if ( nfds < 0 )
-			rlog << "epoll_wait(" << mi_epoll << ") error : " << strerror(errno) << endl ;
+			rlog << "epoll_wait(" << mi_epoll << ") error : " << strerror(errno) << std::endl ;
 
 		return nfds ;
 	}

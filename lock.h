@@ -46,7 +46,7 @@ namespace rui {
 			if( success )
 			{
 				if( pthread_rwlock_unlock( &m_lock ) != 0 )
-					rlog << "rwlock.pthread_rwlock_unlock() error" << endl;
+					rlog << "rwlock.pthread_rwlock_unlock() error" << std::endl;
 			}
 		}
 

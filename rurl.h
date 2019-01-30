@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-using namespace std ;
 
 #include "rui.h"
 
@@ -13,7 +12,7 @@ class rurl
 	public:
 		rurl() {}
 
-		rurl( const string& s_url )
+		rurl( const std::string& s_url )
 		{
 			init( s_url ) ;
 		}
@@ -25,19 +24,19 @@ class rurl
 			msh_port = 0 ;
 		}
 
-		void init( const string& s_url )
+		void init( const std::string& s_url )
 		{
-			const string s_http_word( "http://" ) ;
-			const string s_http_word1( "https://" ) ;
+			const std::string s_http_word( "http://" ) ;
+			const std::string s_http_word1( "https://" ) ;
 
 			bool isHttps = false ;
-			string::size_type pos1 = s_url.find( s_http_word ) ;
+			std::string::size_type pos1 = s_url.find( s_http_word ) ;
 
-			string s_data ;
-			if( pos1 == string::npos )
+			std::string s_data ;
+			if( pos1 == std::string::npos )
 			{
 				pos1 = s_url.find( s_http_word1 ) ;
-				if( pos1 == string::npos )
+				if( pos1 == std::string::npos )
 				{
 					s_data = s_url ;
 				}
@@ -51,9 +50,9 @@ class rurl
 			}
 
 			pos1 = 0u ;
-			string sData1 ;
-			string::size_type pos2 = s_data.find( "/" ) ;
-			if( pos2 == string::npos )
+			std::string sData1 ;
+			std::string::size_type pos2 = s_data.find( "/" ) ;
+			if( pos2 == std::string::npos )
 			{
 				sData1 = s_data ;
 			}
@@ -62,8 +61,8 @@ class rurl
 				ms_path = s_data.substr( pos2 ) ;
 			}
 
-			string::size_type pos3 = sData1.find( ":" ) ;
-			if( pos3 == string::npos )
+			std::string::size_type pos3 = sData1.find( ":" ) ;
+			if( pos3 == std::string::npos )
 			{
 				ms_host = sData1 ;
 
@@ -76,12 +75,12 @@ class rurl
 			}
 		}
 
-		const string& host( ) const
+		const std::string& host( ) const
 		{
 			return ms_host ;
 		}
 
-		const string& path( ) const
+		const std::string& path( ) const
 		{
 			return ms_path ;
 		}
@@ -91,15 +90,15 @@ class rurl
 			return msh_port ;
 		}
 
-		const string whole_url( ) const
+		const std::string whole_url( ) const
 		{
-			string s_whole_url = "http://" + ms_host + ":" + lexical_cast<string>( msh_port ) + "/" + ms_path ;
+			std::string s_whole_url = "http://" + ms_host + ":" + lexical_cast<string>( msh_port ) + "/" + ms_path ;
 			return s_whole_url ;
 		}
 
 	private:
-		string ms_host ;
-		string ms_path ;
+		std::string ms_host ;
+		std::string ms_path ;
 		short msh_port ;
 } ;
 #endif

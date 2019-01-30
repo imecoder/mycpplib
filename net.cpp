@@ -4,7 +4,6 @@
 #include "crypto.h"
 #include <jsoncpp/json/reader.h>
 #include <jsoncpp/json/json.h>
-using namespace	Json ;
 
 namespace rui {
 	namespace net {
@@ -22,13 +21,13 @@ namespace rui {
 
 			if( ret < 0 )
 			{
-				rlog << "select(" << i_socket << ") error : " << strerror( errno )  << endl ;
+				rlog << "select(" << i_socket << ") error : " << strerror( errno )  << std::endl ;
 				return	ERROR ;
 			}
 
 			if( ret == 0 )
 			{
-				rlog << "select(" << i_socket << ") timeout" << endl ;
+				rlog << "select(" << i_socket << ") timeout" << std::endl ;
 				return	TIMEOUT ;
 			}
 
@@ -49,25 +48,25 @@ namespace rui {
 
 			if( ret < 0 )
 			{
-				rlog << "select(" << i_socket << ") error : " << strerror(errno)  << endl ;
+				rlog << "select(" << i_socket << ") error : " << strerror(errno)  << std::endl ;
 				return	ERROR ;
 			}
 
 			if( ret == 0 )
 			{
-				rlog << "select(" << i_socket << ") timeout" << endl ;
+				rlog << "select(" << i_socket << ") timeout" << std::endl ;
 				return	TIMEOUT ;
 			}
 
 			return SMOOTH ;
 		}
 
-		bool connect( int& i_socket, const string& ip, const short& port, const int i_second )
+		bool connect( int& i_socket, const std::string& ip, const short& port, const int i_second )
 		{
 			i_socket = ::socket( AF_INET, SOCK_STREAM, 0 ) ;
 			if( i_socket < 0 )
 			{
-				rlog << "socket() error : " << strerror(errno)  << endl ;
+				rlog << "socket() error : " << strerror(errno)  << std::endl ;
 				return	false ;
 			}
 
@@ -89,7 +88,7 @@ namespace rui {
 
 			if ( ::connect( i_socket, reinterpret_cast<sockaddr*>( &serv_addr ), sizeof( sockaddr ) ) < 0 )
 			{
-				rlog << "connect(" << i_socket << ") error : " << strerror(errno)  << endl ;
+				rlog << "connect(" << i_socket << ") error : " << strerror(errno)  << std::endl ;
 				return	false ;
 			}
 
@@ -102,20 +101,25 @@ namespace rui {
 			opts = ::fcntl( i_socket, F_GETFL );
 			if( opts < 0 )
 			{
-				rlog << "fcntl(" << i_socket << ") error : " << strerror(errno) << endl;
+				rlog << "fcntl(" << i_socket << ") error : " << strerror(errno) << std::endl;
 				return	false;
 			}
 			opts = opts | O_NONBLOCK;
 			if( ::fcntl( i_socket, F_SETFL, opts ) < 0 )
 			{
-				rlog << "fcntl(" << i_socket << ") non-block error : " << strerror(errno) << endl;
+				rlog << "fcntl(" << i_socket << ") non-block error : " << strerror(errno) << std::endl;
 				return false ;
 			}
 
 			return	true ;
 		}
 
-		int read( const int i_socket, vector<char>& v_data, const int i_second )
+		void close(const int i_socket )
+		{
+			::close(i_socket);
+		}
+
+		int read( const int i_socket, std::vector<char>& v_data, const int i_second )
 		{
 			while ( true )
 			{
@@ -124,7 +128,7 @@ namespace rui {
 					int ret = select_rdset( i_socket, i_second ) ;
 					if ( ret < SMOOTH )
 					{
-						rlog << "select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -133,7 +137,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, SOCKET_BUFFER_SIZE ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror(errno) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror(errno) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -146,7 +150,7 @@ namespace rui {
 
 				if ( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	CLOSE ;
 				}
 
@@ -157,22 +161,22 @@ namespace rui {
 			return	SMOOTH ;
 		}
 
-		int write( const int i_socket, const vector<char>& v_data )
+		int write( const int i_socket, const std::vector<char>& v_data )
 		{
 			if (v_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return  ERROR;
 			}
 
 			return write( i_socket, &v_data[0], v_data.size()) ;
 		}
 
-		int write( const int i_socket, const string& s_data )
+		int write( const int i_socket, const std::string& s_data )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return  ERROR;
 			}
 
@@ -183,7 +187,7 @@ namespace rui {
 		{
 			if (p_data == NULL)
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return  ERROR;
 			}
 
@@ -199,7 +203,7 @@ namespace rui {
 					if( errno == EAGAIN )
 						continue ;
 
-					rlog << "write(" << i_socket << ") error : " << strerror( errno )  << endl ;
+					rlog << "write(" << i_socket << ") error : " << strerror( errno )  << std::endl ;
 					return	ERROR ;
 				}
 				numbytes += ret ;
@@ -208,12 +212,12 @@ namespace rui {
 			return	numbytes ;
 		}
 
-		string domain2ip( const string& s_domain )
+		std::string domain2ip( const std::string& s_domain )
 		{
 			hostent *site = ::gethostbyname( s_domain.c_str( ) ) ;
 			if( site == NULL )
 			{
-				rlog << "gethostbyname(" << s_domain << ") error : " << strerror(errno)  << endl ;
+				rlog << "gethostbyname(" << s_domain << ") error : " << strerror(errno)  << std::endl ;
 				return	"" ;
 			}
 
@@ -223,7 +227,7 @@ namespace rui {
 			return	"" ;
 		}
 
-		string get_host_ip(void)
+		std::string get_host_ip(void)
 		{
 			ifaddrs *ifAddrStruct = NULL ;
 			getifaddrs( &ifAddrStruct ) ;
@@ -248,7 +252,7 @@ namespace rui {
 			return	"" ;
 		}
 
-		string get_peer_ip(const int i_socket)
+		std::string get_peer_ip(const int i_socket)
 		{
 			sockaddr_in  peer_addr = { 0x00 } ;
 			::bzero(&peer_addr, sizeof(peer_addr));
@@ -256,7 +260,7 @@ namespace rui {
 
 			if( ::getpeername( i_socket, ( sockaddr * )&peer_addr, &peerlen ) < 0 )
 			{
-				rlog << "getpeername(" << i_socket << ") error : " << strerror(errno) << endl ;
+				rlog << "getpeername(" << i_socket << ") error : " << strerror(errno) << std::endl ;
 				return "";
 			}
 			return ::inet_ntoa( peer_addr.sin_addr );
@@ -277,27 +281,27 @@ namespace rui {
 	}
 
 	namespace http {
-		int read( const int i_socket, vector<char>& v_head, vector<char>& v_body, const int i_second )
+		int read( const int i_socket, std::vector<char>& v_head, std::vector<char>& v_body, const int i_second )
 		{
 			int ret = read_head( i_socket, v_head, i_second ) ;
 			if ( ret != net::SMOOTH )
 				return	ret;
 
-			string s_head( v_head.begin( ), v_head.end( ) ) ;
+			std::string s_head( v_head.begin( ), v_head.end( ) ) ;
 			transform(s_head.begin(), s_head.end(), s_head.begin(), ::tolower);
 
-			if( s_head.find( "content-length:" ) != string::npos )
+			if( s_head.find( "content-length:" ) != std::string::npos )
 				return	read_in_length_mode( i_socket, v_head, v_body, i_second ) ;
 
-			if( s_head.find( "transfer-encoding: chunked" ) != string::npos )
+			if( s_head.find( "transfer-encoding: chunked" ) != std::string::npos )
 				return	read_in_chunk_mode( i_socket, v_body, i_second ) ;
 
-			rlog << "read(" << i_socket << ") http data mode error" << endl ;
+			rlog << "read(" << i_socket << ") http data mode error" << std::endl ;
 
 			return	net::PROTOCOL ;
 		}
 
-		int	read_head( const int i_socket, vector<char>& v_head, const int i_second )
+		int	read_head( const int i_socket, std::vector<char>& v_head, const int i_second )
 		{
 			v_head.clear() ;
 			// 单字节接受，直到接收完http头
@@ -309,7 +313,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -318,7 +322,7 @@ namespace rui {
 				int ret = ::read( i_socket, &szAchar, 1 ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -331,7 +335,7 @@ namespace rui {
 
 				if( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -346,7 +350,7 @@ namespace rui {
 
 			if( i >= 9999 )
 			{
-				rlog << "read(" << i_socket << ") protocol error" << endl ;
+				rlog << "read(" << i_socket << ") protocol error" << std::endl ;
 				return	net::PROTOCOL ;
 			}
 
@@ -354,24 +358,24 @@ namespace rui {
 		}
 
 
-		int	read_in_length_mode(const int i_socket, const vector<char>& v_head, vector<char>& v_body, const int i_second)
+		int	read_in_length_mode(const int i_socket, const std::vector<char>& v_head, std::vector<char>& v_body, const int i_second)
 		{
 			v_body.clear() ;
-			string s_length ;
-			string s_head( v_head.begin(), v_head.end() ) ;
+			std::string s_length ;
+			std::string s_head( v_head.begin(), v_head.end() ) ;
 			transform(s_head.begin(), s_head.end(), s_head.begin(), ::tolower);
 
-			if( Substr( s_length, s_head, "content-length:", "\r\n" ) == string::npos )
+			if( Substr( s_length, s_head, "content-length:", "\r\n" ) == std::string::npos )
 			{
-				rlog << "Substr() error" << endl ;
+				rlog << "Substr() error" << std::endl ;
 				return	net::ERROR ;
 			}
 
-			string::size_type pos = 0U ;
+			std::string::size_type pos = 0U ;
 			while( true )
 			{
 				pos = s_length.find( " " ) ;
-				if( pos == string::npos )
+				if( pos == std::string::npos )
 					break ;
 
 				s_length.erase( pos, 1 ) ;
@@ -389,7 +393,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -398,7 +402,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, SOCKET_BUFFER_SIZE ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -411,7 +415,7 @@ namespace rui {
 
 				if( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -425,13 +429,13 @@ namespace rui {
 			return	net::SMOOTH ;
 		}
 
-		int read_in_chunk_mode( const int i_socket, vector<char>& v_body, const int i_second )
+		int read_in_chunk_mode( const int i_socket, std::vector<char>& v_body, const int i_second )
 		{
 			v_body.clear() ;
 			for( int cnt = 0 ; cnt < 10000000 ; ++cnt )
 			{
-				vector<char> chunckData ;
-				string sChunckLengthWithEnd ;
+				std::vector<char> chunckData ;
+				std::string sChunckLengthWithEnd ;
 				unsigned int iChunckLength = 0 ;
 				for( int i = 0 ; i < 1000 ; ++i )
 				{
@@ -440,7 +444,7 @@ namespace rui {
 						int ret = net::select_rdset( i_socket, i_second ) ;
 						if ( ret < net::SMOOTH )
 						{
-							rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+							rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 							return ret ;
 						}
 					}
@@ -449,7 +453,7 @@ namespace rui {
 					int ret = ::read( i_socket, szAchar, 1 ) ;
 					if( ret < 0 )
 					{
-						rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+						rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 						if( errno == EINTR )
 							continue ;
@@ -462,31 +466,31 @@ namespace rui {
 
 					if( ret == 0 )
 					{
-						rlog << "read(" << i_socket << ") peer closed" << endl ;
+						rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 						return	net::CLOSE;
 					}
 
 					sChunckLengthWithEnd += szAchar[0] ;
 
-					if( sChunckLengthWithEnd.rfind( "\r\n\r\n" ) != string::npos )
+					if( sChunckLengthWithEnd.rfind( "\r\n\r\n" ) != std::string::npos )
 					{
-						rlog << "get head success!" << endl ;
+						rlog << "get head success!" << std::endl ;
 						break ;
 					}
 
 					// 去掉开始的\r\n
 					if( sChunckLengthWithEnd.size( ) >= 2 )
 					{
-						string headBreak( sChunckLengthWithEnd.substr( 0, 2 ) ) ;
+						std::string headBreak( sChunckLengthWithEnd.substr( 0, 2 ) ) ;
 						if( headBreak == "\r\n" )
 							sChunckLengthWithEnd.erase( 0, 2 ) ;
 					}
 
-					string::size_type pos = sChunckLengthWithEnd.find( "\r\n" ) ;
-					if( pos != string::npos )
+					std::string::size_type pos = sChunckLengthWithEnd.find( "\r\n" ) ;
+					if( pos != std::string::npos )
 					{
 						iChunckLength = strtol( sChunckLengthWithEnd.c_str( ), NULL, 16 ) ;
-						rlog << "iChunckLength = " << iChunckLength << endl ;
+						rlog << "iChunckLength = " << iChunckLength << std::endl ;
 						break ;
 					} // end if
 				} // end for
@@ -501,7 +505,7 @@ namespace rui {
 						int ret = net::select_rdset( i_socket, i_second ) ;
 						if ( ret < net::SMOOTH )
 						{
-							rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+							rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 							return ret ;
 						}
 					}
@@ -516,7 +520,7 @@ namespace rui {
 					int ret = ::read( i_socket, buffer, currecv ) ;
 					if( ret < 0 )
 					{
-						rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+						rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 						if( errno == EINTR )
 							continue ;
@@ -529,7 +533,7 @@ namespace rui {
 
 					if( ret == 0 )
 					{
-						rlog << "read(" << i_socket << ") peer closed" << endl ;
+						rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 						return	net::CLOSE ;
 					}
 
@@ -547,167 +551,167 @@ namespace rui {
 			return	net::SMOOTH ;
 		}
 
-		int write( const int i_socket, const string& s_body )
+		int write( const int i_socket, const std::string& s_body )
 		{
 			if (s_body.empty())
 			{
-				rlog << "body empty" << endl ;
+				rlog << "body empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			char length[10] = { 0x00 } ;
 			sprintf( length, "%d", (int)s_body.size() );
 
-			string s_head("HTTP/1.1 200 OK\r\n");
-			s_head += "Content-Length: " + string(length) + "\r\n";
+			std::string s_head("HTTP/1.1 200 OK\r\n");
+			s_head += "Content-Length: " + std::string(length) + "\r\n";
 			s_head += "Content-Type: text/html\r\n\r\n" ;
 
 			return net::write(i_socket, s_head+s_body) ;
 		}
 
-		int write( const int i_socket, const vector<char>& v_body )
+		int write( const int i_socket, const std::vector<char>& v_body )
 		{
 			if (v_body.empty())
 			{
-				rlog << "boday empty" << endl ;
+				rlog << "boday empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			char length[10] = { 0x00 } ;
 			sprintf( length, "%d", (int)v_body.size() );
 
-			string s_head("HTTP/1.1 200 OK\r\n");
-			s_head += "Content-Length: " + string(length) + "\r\n";
+			std::string s_head("HTTP/1.1 200 OK\r\n");
+			s_head += "Content-Length: " + std::string(length) + "\r\n";
 			s_head += "Content-Type: text/html\r\n\r\n" ;
 
 			if ( net::write( i_socket, s_head) == net::ERROR )
 			{
-				rlog << "net::write(" << i_socket << ") error" << endl ;
+				rlog << "net::write(" << i_socket << ") error" << std::endl ;
 				return	net::ERROR ;
 			}
 
 			return net::write(i_socket, v_body) ;
 		}
 
-		bool write_gzip( const int i_socket, const vector<char>& v_body )
+		bool write_gzip( const int i_socket, const std::vector<char>& v_body )
 		{
 			char length[10] = { 0x00 } ;
 			sprintf( length, "%d", (int)v_body.size() );
 
-			string s_head("HTTP/1.1 200 OK\r\n") ;
-			s_head += "Content-Length: " + string(length) +"\r\n" ;
+			std::string s_head("HTTP/1.1 200 OK\r\n") ;
+			s_head += "Content-Length: " + std::string(length) +"\r\n" ;
 			s_head += "Content-Type: text/html\r\n" ;
 			s_head += "Content-Encoding: gzip\r\n\r\n" ;
 
 			if ( net::write( i_socket, s_head) == net::ERROR )
 			{
-				rlog << "net::write(" << i_socket << ") error" << endl ;
+				rlog << "net::write(" << i_socket << ") error" << std::endl ;
 				return	false ;
 			}
 
 			return  net::write( i_socket, v_body) ;
 		}
 
-		int write( const int i_socket, const string& s_head, const string& s_body )
+		int write( const int i_socket, const std::string& s_head, const std::string& s_body )
 		{
 			if (s_head.empty())
 			{
-				rlog << "head empty" << endl ;
+				rlog << "head empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			if (s_body.empty())
 			{
-				rlog << "body empty" << endl ;
+				rlog << "body empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			if ( net::write( i_socket, s_head) == net::ERROR )
 			{
-				rlog << "net::write(" << i_socket << ") error" << endl ;
+				rlog << "net::write(" << i_socket << ") error" << std::endl ;
 				return	net::ERROR ;
 			}
 
 			return net::write(i_socket, s_body) ;
 		}
 
-		int write( const int i_socket, const vector<char>& v_head, const vector<char>& v_body )
+		int write( const int i_socket, const std::vector<char>& v_head, const std::vector<char>& v_body )
 		{
 			if (v_head.empty())
 			{
-				rlog << "head empty" << endl ;
+				rlog << "head empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			if (v_body.empty())
 			{
-				rlog << "body empty" << endl ;
+				rlog << "body empty" << std::endl ;
 				return  net::ERROR;
 			}
 
 			if ( net::write( i_socket, v_head) == net::ERROR )
 			{
-				rlog << "net::write(" << i_socket << ") error" << endl ;
+				rlog << "net::write(" << i_socket << ") error" << std::endl ;
 				return	net::ERROR ;
 			}
 
 			return net::write(i_socket, v_body) ;
 		}
 
-		bool write_failure( const int i_socket, const string& s_data )
+		bool write_failure( const int i_socket, const std::string& s_data )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return false;
 			}
 
-			Value root;
+			Json::Value root;
 			root[0] = json::FAILURE;
 			root[1] = s_data ;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write( i_socket, json ) < 0  )
 			{
-				rlog << "write(" << i_socket << ") error" << endl ;
+				rlog << "write(" << i_socket << ") error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write(" << i_socket << ") failure data" << endl << json << endl;
+			rlog << "write(" << i_socket << ") failure data" << std::endl << json << std::endl;
 
 			return true ;
 		}
 
 		bool write_success( const int i_socket )
 		{
-			Value root;
+			Json::Value root;
 			root[0] = json::SUCCESS;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write( i_socket, json ) < 0  )
 			{
-				rlog << "write(" << i_socket << ") error" << endl ;
+				rlog << "write(" << i_socket << ") error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write(" << i_socket << ") success data" << endl << json << endl;
+			rlog << "write(" << i_socket << ") success data" << std::endl << json << std::endl;
 
 			return true ;
 		}
 
-		pair<string, string> divide_argument( const string& url, const string& sDelem )
+		std::pair<std::string, std::string> divide_argument( const std::string& url, const std::string& sDelem )
 		{
-			string::size_type pos = url.find( sDelem );
-			if( pos != string::npos )
-				return make_pair( url.substr( 0, pos ), url.substr( pos + sDelem.size( ) ) );
+			std::string::size_type pos = url.find( sDelem );
+			if( pos != std::string::npos )
+				return std::make_pair( url.substr( 0, pos ), url.substr( pos + sDelem.size( ) ) );
 
-			return make_pair( "", "" );
+			return std::make_pair( "", "" );
 		}
 
-		void parse_url( URLContainer &urlArgMap, const string& s_vpath )
+		void parse_url( URLContainer &urlArgMap, const std::string& s_vpath )
 		{
 			urlArgMap.clear( );
 
 			size_t pos1 = s_vpath.find( "?" );
-			if( pos1 == string::npos )
+			if( pos1 == std::string::npos )
 			{
 				urlArgMap.insert( URLContainer::value_type( VPATH, s_vpath ) );
 			}
@@ -715,21 +719,21 @@ namespace rui {
 			{
 				urlArgMap.insert( URLContainer::value_type( VPATH, s_vpath.substr( 0, pos1 ) ) );
 
-				string::size_type pos2 = pos1 + 1;
-				string::size_type pos3 = pos1 + 1;
+				std::string::size_type pos2 = pos1 + 1;
+				std::string::size_type pos3 = pos1 + 1;
 				while( true )
 				{
 					pos3 = s_vpath.find( "&", pos2 );
-					if( pos3 != string::npos )
+					if( pos3 != std::string::npos )
 					{
-						string sArgSec( s_vpath, pos2, pos3 - pos2 );
+						std::string sArgSec( s_vpath, pos2, pos3 - pos2 );
 
 						urlArgMap.insert( divide_argument( sArgSec, "=" ) );
 						pos2 = pos3 + 1;
 					}
 					else
 					{
-						string sArgSec( s_vpath, pos2 );
+						std::string sArgSec( s_vpath, pos2 );
 						urlArgMap.insert( divide_argument( sArgSec, "=" ) );
 						break;
 					}
@@ -737,7 +741,7 @@ namespace rui {
 			}
 		}
 
-		void get_vpath( string& s_vpath, const string& s_content, const HTTP_TYPE type )
+		void get_vpath( std::string& s_vpath, const std::string& s_content, const HTTP_TYPE type )
 		{
 			s_vpath.clear( );
 
@@ -753,8 +757,8 @@ namespace rui {
 			// 虚拟路径是完整url的情况, 去http头
 			if( s_vpath.substr( 0, 7 ) == "http://" )
 			{
-				string::size_type pos = s_vpath.find( '/', 7 );
-				if( pos == string::npos )
+				std::string::size_type pos = s_vpath.find( '/', 7 );
+				if( pos == std::string::npos )
 				{
 					// 访问主页的情况
 					s_vpath.clear( );
@@ -769,11 +773,11 @@ namespace rui {
 				s_vpath.erase( 0, 1 );
 
 			// 过滤&amp;的情况
-			const string sKeyWord( "&amp;" );
+			const std::string sKeyWord( "&amp;" );
 			while( true )
 			{
-				string::size_type pos = s_vpath.find( sKeyWord );
-				if( pos == string::npos )
+				std::string::size_type pos = s_vpath.find( sKeyWord );
+				if( pos == std::string::npos )
 					break ;
 
 				s_vpath.replace( pos, sKeyWord.size( ), "&" );
@@ -782,7 +786,7 @@ namespace rui {
 	}
 
 	namespace json {
-		int read( const int i_socket, vector<char>& v_data, const int i_second )
+		int read( const int i_socket, std::vector<char>& v_data, const int i_second )
 		{
 			v_data.clear() ;
 
@@ -795,7 +799,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -804,7 +808,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, 4 ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -817,7 +821,7 @@ namespace rui {
 
 				if ( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -833,7 +837,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -842,7 +846,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, length ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -855,7 +859,7 @@ namespace rui {
 
 				if ( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -871,11 +875,11 @@ namespace rui {
 			return	net::SMOOTH ;
 		}
 
-		int write( const int i_socket, const string& s_data )
+		int write( const int i_socket, const std::string& s_data )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return  net::ERROR;
 			}
 
@@ -887,11 +891,11 @@ namespace rui {
 			return net::write( i_socket, buffer, length+4 ) ;
 		}
 
-		int read_decoded( const int i_socket, vector<char>& v_data, const int i_xor, const int decode_key, const int i_second )
+		int read_decoded( const int i_socket, std::vector<char>& v_data, const int i_xor, const int decode_key, const int i_second )
 		{
 			v_data.clear() ;
 
-			vector<char> v_in;
+			std::vector<char> v_in;
 
 			int length = 0 ;
 
@@ -902,7 +906,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -911,7 +915,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, 4 ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -924,7 +928,7 @@ namespace rui {
 
 				if ( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -940,7 +944,7 @@ namespace rui {
 					int ret = net::select_rdset( i_socket, i_second ) ;
 					if ( ret < net::SMOOTH )
 					{
-						rlog << "net::select_rdset(" << i_socket << ") error" << endl ;
+						rlog << "net::select_rdset(" << i_socket << ") error" << std::endl ;
 						return ret ;
 					}
 				}
@@ -949,7 +953,7 @@ namespace rui {
 				int ret = ::read( i_socket, buffer, length ) ;
 				if( ret < 0 )
 				{
-					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << endl;
+					rlog << "read(" << i_socket << ") error : " << strerror( errno ) << std::endl;
 
 					if( errno == EINTR )
 						continue ;
@@ -962,7 +966,7 @@ namespace rui {
 
 				if ( ret == 0 )
 				{
-					rlog << "read(" << i_socket << ") peer closed" << endl ;
+					rlog << "read(" << i_socket << ") peer closed" << std::endl ;
 					return	net::CLOSE ;
 				}
 
@@ -973,27 +977,27 @@ namespace rui {
 			crypto o_crypto(i_xor) ;
 			if ( !o_crypto.decode(v_in, v_data, decode_key) )
 			{
-				rlog << "o_crypto.decode() error" << endl ;
+				rlog << "o_crypto.decode() error" << std::endl ;
 				return net::PROTOCOL;
 			}
 
 			return	net::SMOOTH ;
 		}
 
-		int write_encoded( const int i_socket, const string& s_data, const int i_xor, const int encode_key )
+		int write_encoded( const int i_socket, const std::string& s_data, const int i_xor, const int encode_key )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return  net::ERROR;
 			}
 
-			vector<char> v_in(s_data.begin(), s_data.end()) ;
-			vector<char> v_out;
+			std::vector<char> v_in(s_data.begin(), s_data.end()) ;
+			std::vector<char> v_out;
 			crypto o_crypto(i_xor) ;
 			if ( !o_crypto.encode(v_in, v_out, encode_key) )
 			{
-				rlog << "o_crypto.encode() error" << endl ;
+				rlog << "o_crypto.encode() error" << std::endl ;
 				return -1 ;
 			}
 
@@ -1005,25 +1009,25 @@ namespace rui {
 			return net::write( i_socket, buffer, length+4 ) ;
 		}
 
-		bool write_failure( const int i_socket, const string& s_data )
+		bool write_failure( const int i_socket, const std::string& s_data )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return false;
 			}
 
-			Value root;
+			Json::Value root;
 			root[0] = FAILURE;
 			root[1] = s_data ;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write( i_socket, json ) < 0  )
 			{
-				rlog << "write(" << i_socket << ") error" << endl ;
+				rlog << "write(" << i_socket << ") error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write(" << i_socket << ") failure data" << endl << json << endl;
+			rlog << "write(" << i_socket << ") failure data" << std::endl << json << std::endl;
 
 			return true ;
 		}
@@ -1031,55 +1035,55 @@ namespace rui {
 
 		bool write_success( const int i_socket )
 		{
-			Value root;
+			Json::Value root;
 			root[0] = SUCCESS;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write( i_socket, json ) < 0  )
 			{
-				rlog << "write(" << i_socket << ")error" << endl ;
+				rlog << "write(" << i_socket << ")error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write(" << i_socket << ") success data" << endl << json << endl;
+			rlog << "write(" << i_socket << ") success data" << std::endl << json << std::endl;
 
 			return true ;
 		}
 
-		bool write_failure_encoded( const int i_socket, const string& s_data, const int i_xor, const int encode_key )
+		bool write_failure_encoded( const int i_socket, const std::string& s_data, const int i_xor, const int encode_key )
 		{
 			if (s_data.empty())
 			{
-				rlog << "data empty" << endl ;
+				rlog << "data empty" << std::endl ;
 				return false;
 			}
 
-			Value root;
+			Json::Value root;
 			root[0] = json::FAILURE;
 			root[1] = s_data ;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write_encoded( i_socket, json, i_xor, encode_key ) < 0  )
 			{
-				rlog << "net::write_encoded(" << i_socket << ") error" << endl ;
+				rlog << "net::write_encoded(" << i_socket << ") error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write_encoded(" << i_socket << ") failure data" << endl << json << endl;
+			rlog << "write_encoded(" << i_socket << ") failure data" << std::endl << json << std::endl;
 
 			return true ;
 		}
 
 		bool write_success_encoded( const int i_socket, const int i_xor, const int encode_key )
 		{
-			Value root;
+			Json::Value root;
 			root[0] = SUCCESS;
-			string json = root.toStyledString();
+			std::string json = root.toStyledString();
 			if ( write_encoded( i_socket, json, i_xor, encode_key ) < 0  )
 			{
-				rlog << "write_encoded(" << i_socket << ")error" << endl ;
+				rlog << "write_encoded(" << i_socket << ")error" << std::endl ;
 				return false ;
 			}
 
-			rlog << "write_encoded(" << i_socket << ") success data" << endl << json << endl;
+			rlog << "write_encoded(" << i_socket << ") success data" << std::endl << json << std::endl;
 
 			return true ;
 		}

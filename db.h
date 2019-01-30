@@ -2,7 +2,6 @@
 #define _DB_H_
 
 #include <iostream>
-using namespace std ;
 
 // otl
 #define OTL_BIGINT long long
@@ -15,10 +14,10 @@ using namespace std ;
 
 inline void show_sql_error( const otl_exception &err, ostream &os = cout )
 {
-	os << "err msg: " << err.msg << endl;                 // print out error message
-	os << "err s_sql: " << err.stm_text << endl;            // print out SQL that caused the error
-	os << "err num: " << err.sqlstate << endl;            // print out SQLSTATE info.
-	os << "err var: " << err.var_info << endl;            // print out the variable that caused the error
+	os << "err msg: " << err.msg << std::endl;                 // print out error message
+	os << "err s_sql: " << err.stm_text << std::endl;            // print out SQL that caused the error
+	os << "err num: " << err.sqlstate << std::endl;            // print out SQLSTATE info.
+	os << "err var: " << err.var_info << std::endl;            // print out the variable that caused the error
 }
 
 #endif
