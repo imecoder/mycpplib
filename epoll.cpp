@@ -121,7 +121,7 @@ namespace rui {
 		}
 
 		std::string ip = ::inet_ntoa( their_addr.sin_addr ) ;
-		unsigned short port = ::ntohs( their_addr.sin_port ) ;
+		unsigned short port = ntohs( their_addr.sin_port ) ;
 
 		std::cout << std::endl << std::endl ;
 		rlog << ">>>   socket(" << i_socket << ") from (" << ip << ":" << port << ")   <<<" << std::endl;

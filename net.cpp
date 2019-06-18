@@ -73,7 +73,7 @@ namespace rui {
 			sockaddr_in serv_addr = { 0x00 } ;
 			::bzero(&serv_addr, sizeof(serv_addr));
 			serv_addr.sin_family = AF_INET ;
-			serv_addr.sin_port = ::htons( port ) ;
+			serv_addr.sin_port = htons( port ) ;
 			serv_addr.sin_addr.s_addr = ::inet_addr( ip.c_str( ) ) ;
 
 			timeval tv ;
