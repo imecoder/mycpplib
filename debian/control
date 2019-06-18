@@ -1,0 +1,8 @@
+Package:mycpp
+Version:0.0.1
+Section:utils
+Priority:extra
+Maintainer:liruigang
+Depends:unixodbc-dev libjsoncpp-dev uuid-dev
+Architecture:amd64
+Description:my cpp lib
