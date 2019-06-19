@@ -12,7 +12,7 @@
 
 #include "otlv4.h"
 
-inline void show_sql_error( const otl_exception &err, ostream &os = cout )
+inline void show_sql_error( const otl_exception &err, std::ostream &os = std::cout )
 {
 	os << "err msg: " << err.msg << std::endl;                 // print out error message
 	os << "err s_sql: " << err.stm_text << std::endl;            // print out SQL that caused the error

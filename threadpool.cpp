@@ -14,7 +14,7 @@ namespace rui {
 
 		pthread_cond_broadcast( &m_cond_lock );
 
-//		��������ָ�룬û��ɾ��ָ����������std::queue��map��vector�ȣ�������Ҫѭ��ɾ������Ԫ��ָ�롣
+//		对于智能指针，没有删除指针操作。因此std::queue，map，vector等，都不需要循环删除各个元素指针。
 //		while( !mq_task.empty( ) )
 //		{
 //			rlog << "mq_task.size() = " << mq_task.size() << std::endl;

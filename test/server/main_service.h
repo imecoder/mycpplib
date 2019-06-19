@@ -9,6 +9,7 @@
 
 #include "epoll.h"
 #include "task.h"
+#include "db.h"
 
 extern short gsh_main_service_listen_port;
 extern int gi_client_idle ;
