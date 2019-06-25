@@ -20,7 +20,7 @@ target_link_libraries (${PROJECT_NAME} rt uuid pthread ssl odbc jsoncpp /usr/loc
 # Packaging section
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
-set(CPACK_PACKAGE_VERSION "0.0.1")
+set(CPACK_PACKAGE_VERSION "1.0.0")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_NAME}")
 set(CPACK_PACKAGE_DESCRIPTION "mycpp test")
 
