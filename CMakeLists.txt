@@ -24,7 +24,6 @@ INSTALL (FILES mycpp.conf DESTINATION /etc/ld.so.conf.d/)
 #find_package(Qt5Core)
 
 
-
 # Packaging section
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")

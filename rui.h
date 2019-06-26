@@ -33,7 +33,9 @@ inline std::string getTime(const char *format)
 	return szTime;
 }
 
-#define	rlog	std::cout << "[" << syscall( SYS_gettid ) << " " << getTime( "%Y-%m-%d %H:%M:%S") << " " << __FILE__ << "," << __LINE__ << "] "
+
+#define	rlog \
+    std::cout << "[" << syscall( SYS_gettid ) << " " << getTime( "%Y-%m-%d %H:%M:%S") << " " << std::string(__FILE__).substr(std::string(__FILE__).rfind('/')+1, std::string(__FILE__).length()) << "," << __LINE__ << "] "
 
 
 /**
